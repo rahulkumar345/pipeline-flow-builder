@@ -1,17 +1,57 @@
-// toolbar.js
-
+import { Fragment } from 'react';
 import { DraggableNode } from './draggableNode';
 
-export const PipelineToolbar = () => {
+const TOOLBAR_GROUPS = [
+  {
+    label: 'General',
+    items: [
+      { type: 'customInput', label: 'Input' },
+      { type: 'customOutput', label: 'Output' },
+      { type: 'text', label: 'Text' },
+    ],
+  },
+  {
+    label: 'AI',
+    items: [{ type: 'llm', label: 'LLM' }],
+  },
+  {
+    label: 'Logic',
+    items: [
+      { type: 'filter', label: 'Filter' },
+      { type: 'conditional', label: 'Conditional' },
+    ],
+  },
+  {
+    label: 'Compute',
+    items: [{ type: 'math', label: 'Math' }],
+  },
+  {
+    label: 'Network',
+    items: [{ type: 'api', label: 'API' }],
+  },
+  {
+    label: 'Annotate',
+    items: [{ type: 'note', label: 'Note' }],
+  },
+];
 
-    return (
-        <div style={{ padding: '10px' }}>
-            <div style={{ marginTop: '20px', display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                <DraggableNode type='customInput' label='Input' />
-                <DraggableNode type='llm' label='LLM' />
-                <DraggableNode type='customOutput' label='Output' />
-                <DraggableNode type='text' label='Text' />
-            </div>
+export const PipelineToolbar = () => (
+  <div className="vs-toolbar">
+    {TOOLBAR_GROUPS.map((group, index) => (
+      <Fragment key={group.label}>
+        {index > 0 && <div className="vs-toolbar-divider" />}
+        <div className="vs-toolbar-group">
+          <span className="vs-toolbar-group-label">{group.label}</span>
+          {group.items.map((item) => (
+            <DraggableNode
+              key={item.type}
+              type={item.type}
+              label={item.label}
+            />
+          ))}
         </div>
-    );
-};
+      </Fragment>
+    ))}
+    <span className="vs-toolbar-hint">Drag a node onto the canvas</span>
+  </div>
+);

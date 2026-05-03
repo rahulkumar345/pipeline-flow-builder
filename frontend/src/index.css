@@ -1,13 +1,555 @@
-body {
+:root {
+  --color-primary: #4F46E5;
+  --color-primary-hover: #4338CA;
+  --color-primary-soft: #EEF2FF;
+  --color-bg: #F9FAFB;
+  --color-surface: #FFFFFF;
+  --color-border: #E5E7EB;
+  --color-border-strong: #D1D5DB;
+  --color-text-primary: #111827;
+  --color-text-secondary: #6B7280;
+  --color-text-muted: #9CA3AF;
+  --color-edge: #6366F1;
+  --color-success: #10B981;
+  --color-danger: #EF4444;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+
+  --shadow-sm: 0 1px 2px rgba(17, 24, 39, 0.04);
+  --shadow-md: 0 1px 3px rgba(17, 24, 39, 0.06), 0 4px 12px rgba(17, 24, 39, 0.04);
+  --shadow-lg: 0 4px 16px rgba(17, 24, 39, 0.08), 0 12px 32px rgba(17, 24, 39, 0.06);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  height: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  background: var(--color-bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+button {
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+}
+
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* ---------- Buttons ---------- */
+.vs-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-weight: 500;
+  font-size: 13px;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.05s ease;
+}
+
+.vs-btn:hover:not(:disabled) {
+  background: #F3F4F6;
+  border-color: var(--color-border-strong);
+}
+
+.vs-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.vs-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.vs-btn--primary {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+.vs-btn--primary:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+}
+
+.vs-btn--ghost {
+  background: transparent;
+  border-color: transparent;
+}
+
+.vs-btn--ghost:hover:not(:disabled) {
+  background: #F3F4F6;
+  border-color: transparent;
+}
+
+.vs-btn--icon {
+  width: 34px;
+  padding: 0;
+  height: 34px;
+}
+
+/* ---------- Form controls ---------- */
+.vs-input,
+.vs-select,
+.vs-textarea {
+  width: 100%;
+  padding: 6px 8px;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  color: var(--color-text-primary);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  outline: none;
+}
+
+.vs-input:focus,
+.vs-select:focus,
+.vs-textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+.vs-textarea {
+  resize: none;
+  font-family: inherit;
+  line-height: 1.4;
+}
+
+.vs-field-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 3px;
+  display: block;
+}
+
+/* ---------- ReactFlow customizations ---------- */
+.react-flow__handle {
+  width: 10px;
+  height: 10px;
+  background: #fff;
+  border: 2px solid var(--color-edge);
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.react-flow__handle:hover {
+  background: var(--color-edge);
+  transform: scale(1.2);
+}
+
+.react-flow__handle-left {
+  left: -6px;
+}
+
+.react-flow__handle-right {
+  right: -6px;
+}
+
+.react-flow,
+.react-flow__pane,
+.react-flow__renderer,
+.vs-canvas {
+  touch-action: none;
+}
+
+/* Touch usage hint — only visible on mobile */
+.vs-touch-hint {
+  display: none;
+}
+
+.vs-fit-icon {
+  display: inline-block;
+  font-size: 11px;
+  padding: 0 2px;
+  background: var(--color-bg);
+  border-radius: 3px;
+  border: 1px solid var(--color-border);
+}
+
+.react-flow__edge-path {
+  stroke-width: 2;
+}
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: var(--color-primary);
+}
+
+.react-flow__controls {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--color-border);
+}
+
+.react-flow__controls-button {
+  background: #fff;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.react-flow__minimap {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+/* ---------- Scrollbar ---------- */
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* ---------- Animations ---------- */
+@keyframes vs-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- Layout: app shell ---------- */
+.vs-app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  min-height: 0;
+}
+
+.vs-header {
+  flex-shrink: 0;
+  height: 56px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  gap: 12px;
+  min-width: 0;
+}
+
+.vs-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.vs-brand-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.vs-brand-mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #4F46E5, #8B5CF6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: -0.02em;
+  flex-shrink: 0;
+}
+
+.vs-brand-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.vs-title-full {
+  display: inline;
+}
+
+.vs-title-short {
+  display: none;
+}
+
+.vs-brand-subtitle {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vs-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.vs-submit-short {
+  display: none;
+}
+
+/* ---------- Layout: toolbar ---------- */
+.vs-toolbar {
+  flex-shrink: 0;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: 10px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+}
+
+.vs-toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.vs-toolbar-group-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.vs-toolbar-divider {
+  width: 1px;
+  height: 22px;
+  background: var(--color-border);
+  flex-shrink: 0;
+}
+
+.vs-toolbar-hint {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* ---------- Layout: canvas ---------- */
+.vs-canvas-wrapper {
+  flex: 1;
+  min-height: 0;
+  padding: 16px;
+  background: var(--color-bg);
+  position: relative;
+}
+
+.vs-canvas {
+  width: 100%;
+  height: 100%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.vs-empty-state {
+  position: absolute;
+  inset: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.vs-empty-card {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(4px);
+  border: 1px dashed var(--color-border-strong);
+  padding: 20px 28px;
+  border-radius: 12px;
+  max-width: 320px;
+}
+
+.vs-empty-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+/* ---------- Result toast ---------- */
+.vs-result-toast {
+  position: fixed;
+  top: 80px;
+  right: 24px;
+  z-index: 1000;
+  animation: vs-toast-in 0.2s ease-out;
+}
+
+.vs-result-card {
+  min-width: 260px;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ---------- Tablet (≤1024px) ---------- */
+@media (max-width: 1024px) {
+  .vs-toolbar {
+    gap: 12px;
+    padding: 8px 16px;
+  }
+  .vs-toolbar-hint {
+    display: none;
+  }
+}
+
+/* ---------- Mobile (≤640px) ---------- */
+@media (max-width: 640px) {
+  .vs-header {
+    height: 52px;
+    padding: 0 12px;
+    gap: 6px;
+  }
+  .vs-brand-subtitle {
+    display: none;
+  }
+  .vs-brand-title {
+    font-size: 14px;
+  }
+  .vs-title-full {
+    display: none;
+  }
+  .vs-title-short {
+    display: inline;
+  }
+  .vs-toolbar {
+    padding: 8px 12px;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+  .vs-toolbar > *,
+  .vs-toolbar-group > * {
+    flex-shrink: 0;
+  }
+  .vs-toolbar-group-label,
+  .vs-toolbar-divider {
+    display: none;
+  }
+  .vs-canvas-wrapper {
+    padding: 8px;
+  }
+  .vs-canvas {
+    border-radius: 8px;
+  }
+  .react-flow__minimap {
+    display: none;
+  }
+  .vs-result-toast {
+    left: 12px;
+    right: 12px;
+    top: 64px;
+  }
+  .vs-result-card {
+    min-width: 0;
+  }
+  .vs-submit-full {
+    display: none;
+  }
+  .vs-submit-short {
+    display: inline;
+  }
+  .vs-redo-btn {
+    display: none;
+  }
+  /* Slimmer toolbar scrollbar */
+  .vs-toolbar::-webkit-scrollbar {
+    height: 4px;
+  }
+  /* Mobile touch usage hint */
+  .vs-touch-hint {
+    display: block;
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(17, 24, 39, 0.85);
+    color: #fff;
+    font-size: 11px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+    z-index: 6;
+    pointer-events: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  }
+  .vs-fit-icon {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #fff;
+  }
+  /* Bigger, easier to tap controls on mobile */
+  .react-flow__controls-button {
+    width: 32px;
+    height: 32px;
+  }
 }
